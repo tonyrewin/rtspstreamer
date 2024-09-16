@@ -1,6 +1,6 @@
 # CMakeLists.txt
 #
-# Build script for rtspstreamer Pure Data external
+# Build script for rtmpstreamer_tilde Pure Data external
 #
 # Usage:
 # mkdir build
@@ -9,7 +9,7 @@
 # make
 
 cmake_minimum_required(VERSION 3.13)
-project(rtspstreamer C)
+project(rtmpstreamer_tilde C)
 
 # Find the FFmpeg libraries
 find_package(PkgConfig REQUIRED)
@@ -29,32 +29,33 @@ include_directories(
 )
 
 # Add the source file
-add_library(rtspstreamer MODULE rtspstreamer.c)
+add_library(rtmpstreamer_tilde MODULE rtmpstreamer~.c)
 
 # Set library search paths
-target_link_directories(rtspstreamer PRIVATE
+target_link_directories(rtmpstreamer_tilde PRIVATE
     ${AVFORMAT_LIBRARY_DIRS}
     ${AVCODEC_LIBRARY_DIRS}
     ${AVUTIL_LIBRARY_DIRS}
 )
 
 # Link the FFmpeg libraries
-target_link_libraries(rtspstreamer
+target_link_libraries(rtmpstreamer_tilde
     ${AVFORMAT_LIBRARIES}
     ${AVCODEC_LIBRARIES}
     ${AVUTIL_LIBRARIES}
 )
 
-# Set linker flags for Pd external
-set_target_properties(rtspstreamer PROPERTIES
-    PREFIX ""
-    SUFFIX ".pd_darwin"  # For macOS
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    LINK_FLAGS "-bundle -undefined dynamic_lookup"
+# Set linker flags and output properties for Pd external
+set_target_properties(rtmpstreamer_tilde PROPERTIES
+    PREFIX ""                            # No prefix
+    SUFFIX ".pd_darwin"                  # Suffix for macOS Pd external
+    OUTPUT_NAME "rtmpstreamer~"           # Set the output name to rtmpstreamer~
+    LIBRARY_OUTPUT_DIRECTORY "~/Documents/Pd/externals"  # Output directory
+    LINK_FLAGS "-bundle -undefined dynamic_lookup"  # Linker flags for Pd
 )
 
 # Ensure the external is built as a module
-set_target_properties(rtspstreamer PROPERTIES
+set_target_properties(rtmpstreamer_tilde PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "@loader_path"
 )
